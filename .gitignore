@@ -1,0 +1,25 @@
+# Python cache files — Python creates these automatically, we don't want them in git
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment — if you create one, don't track it
+venv/
+.env
+
+# Data files — the dataset is huge (123k images), never commit raw data to git
+data/raw/
+data/processed/
+
+# Trained model weights — these are large binary files, not suited for git
+models/*.pth
+models/*.pt
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# macOS system files
+.DS_Store
+
+# Hugging Face cache — downloaded data cached locally
+~/.cache/huggingface/
