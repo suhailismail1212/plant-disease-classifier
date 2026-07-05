@@ -19,6 +19,7 @@ import torch.optim as optim
 
 from src.dataset import get_dataloaders
 from src.model import build_model, get_device
+from src.evaluate import plot_training_curves
 from src.config import NUM_EPOCHS, LEARNING_RATE, MODEL_SAVE_PATH
 
 
@@ -166,6 +167,9 @@ def train_model():
 
     best_val_accuracy = 0.0  # tracks the best validation accuracy seen so far
 
+    # history records per-epoch metrics so we can plot training curves later
+    history = {"train_loss": [], "val_loss": [], "train_acc": [], "val_acc": []}
+
     print(f"\nStarting training for {NUM_EPOCHS} epochs...\n")
 
     for epoch in range(1, NUM_EPOCHS + 1):
@@ -194,6 +198,12 @@ def train_model():
         # overfitting — memorising training data rather than generalising.
         # Validation accuracy tells us how well the model performs on
         # images it has never directly learned from.
+        # Record this epoch's metrics into history
+        history["train_loss"].append(train_loss)
+        history["val_loss"].append(val_loss)
+        history["train_acc"].append(train_acc)
+        history["val_acc"].append(val_acc)
+
         if val_acc > best_val_accuracy:
             best_val_accuracy = val_acc
             torch.save(model.state_dict(), MODEL_SAVE_PATH)
@@ -201,6 +211,9 @@ def train_model():
 
     print(f"\nTraining complete. Best validation accuracy: {best_val_accuracy*100:.2f}%")
     print(f"Best model saved to: {MODEL_SAVE_PATH}")
+
+    # Plot and save training curves now that all epochs are done
+    plot_training_curves(history)
 
 
 if __name__ == "__main__":
